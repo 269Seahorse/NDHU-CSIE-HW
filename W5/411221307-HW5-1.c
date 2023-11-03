@@ -11,7 +11,7 @@ int comp(const void *a, const void *b){
     if(c % m == d % m){
         if(abs(c % 2) > abs(d % 2)) return -1;
         if(abs(c % 2) < abs(d % 2)) return 1;
-        if(abs(c % 2) == 1 && abs(c % 2) == 1){
+        if(abs(c % 2) == 1 && abs(d % 2) == 1){
             if(c > d) return -1;
             if(c < d) return 1;
         }
