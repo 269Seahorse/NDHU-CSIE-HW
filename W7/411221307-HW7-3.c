@@ -24,9 +24,9 @@ int main(){
         double total = 0;
         for(int i = 0; i < n; i++){
             if(p[i].y > maxy){
-                double x =  p[i].x - (p[i].x - p[i-1].x) * (p[i].y - maxy) / (p[i].y - p[i-1].y);
+                double x = (p[i].x - p[i-1].x) * (p[i].y - maxy) / (p[i].y - p[i-1].y);
                 double y = maxy;
-                total += sqrt((x - p[i].x) * (x - p[i].x) + (y - p[i].y) * (y - p[i].y));
+                total += sqrt((x) * (x) + (y - p[i].y) * (y - p[i].y));
                 maxy = p[i].y;
             }
         }
