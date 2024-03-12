@@ -2,10 +2,19 @@
 using namespace std;
 
 class Point{
-public:
+private:
     float x, y;
 
+public:
     Point(float x2, float y2): x(x2), y(y2) {};
+
+    float getx() {
+        return x;
+    }
+
+    float gety() {
+        return y;
+    }
 };
 
 int main(){
@@ -15,6 +24,6 @@ int main(){
         float x, y;
         cin >> x >> y;
         Point p(x, y);
-        cout << "(" << p.x << ", " << p.y << ")\n";
+        cout << "(" << p.getx() << ", " << p.gety() << ")\n";
     }
 }
