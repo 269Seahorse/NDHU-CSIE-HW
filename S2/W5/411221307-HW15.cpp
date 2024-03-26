@@ -58,7 +58,7 @@ public:
     }
 
     void dec2bin(int a){
-        int digit = 0, ans = 0;
+        long long digit = 0, ans = 0;
         while(a != 0){
             ans += (a % 2) * (pow(10, digit));
             a /= 2;
