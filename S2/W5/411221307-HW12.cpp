@@ -70,7 +70,15 @@ public:
     Integer subtraction(const Integer &b) const{
         string ans = "";
         bool negative = 0, carry = 0;
-        if((count < b.count) || (count == b.count && value[count - 1].getDigit() < b.value[count - 1].getDigit())) negative = 1;
+        if(count < b.count) negative = 1;
+        else if(count == b.count){
+            for(int i = count - 1; i >= 0; i--){
+                if(value[i].getDigit() < b.value[i].getDigit()){
+                    negative = 1;
+                    break;
+                }
+            }
+        }
         int len = max(count, b.count), tmp;
         for(int i = 0; i < len; i++){
             if(!negative)
