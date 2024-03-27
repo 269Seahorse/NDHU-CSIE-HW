@@ -73,6 +73,9 @@ public:
         if(count < b.count) negative = 1;
         else if(count == b.count){
             for(int i = count - 1; i >= 0; i--){
+                if(value[i].getDigit() > b.value[i].getDigit()){
+                    break;
+                }
                 if(value[i].getDigit() < b.value[i].getDigit()){
                     negative = 1;
                     break;
