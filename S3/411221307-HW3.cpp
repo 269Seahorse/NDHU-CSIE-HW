@@ -14,7 +14,7 @@ public:
     }
     int push(int data)
     {
-      if(top > SIZE) return -1;
+      if(top >= SIZE) return -1;
       else {
         top++;
         this -> data[top - 1] = data;
