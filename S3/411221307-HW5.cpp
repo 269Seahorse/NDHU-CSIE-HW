@@ -113,9 +113,6 @@ public:
 			}
 			i = i -> getNext();
 		}
-		while (list -> getPre() != NULL) {
-			list = list -> getPre();
-		}
 	} 
 	
 	void print()
