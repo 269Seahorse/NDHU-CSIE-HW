@@ -1,167 +1,183 @@
 #include <bits/stdc++.h>
 
+
 template<class T>
 class MinMaxHeap {
 public:
     MinMaxHeap() {}
-
+    //The insert function in a Min-Max Heap adds a new element to the heap while maintaining its unique properties.
     void insert(T value) {
         heap.push_back(value);
-        bubbleUp(heap.size() - 1);
+        nodeUp(heap.size() - 1);
     }
-
+    // Retrieve the minimum element in the heap, throw an exception when heap is empty
     T getMin() const {
-        if (heap.empty()) throw std::runtime_error("Heap is empty");
+        if(heap.empty()) throw std::out_of_range("Heap is empty");
         return heap[0];
     }
-
+    // Retrieve the maximum element in the heap, throw an exception when heap is empty
     T getMax() const {
-        if (heap.empty()) throw std::runtime_error("Heap is empty");
-        if (heap.size() == 1) return heap[0];
+        if(heap.empty()) throw std::out_of_range("Heap is empty");
+        if(heap.size() == 1) return heap[0];
         return std::max(heap[1], heap[2]);
     }
-
+    // Delete the minimum element in the heap, throw an exception when heap is empty
     void deleteMin() {
-        if (heap.empty()) throw std::runtime_error("Heap is empty");
+        if(heap.empty()) throw std::out_of_range("Heap is empty");
         std::swap(heap[0], heap.back());
         heap.pop_back();
-        if (!heap.empty()) bubbleDown(0);
+        if(!heap.empty()) nodeDown(0);
     }
-
+    // Delete the maximum element in the heap, throw an exception when heap is empty
     void deleteMax() {
-        if (heap.empty()) throw std::runtime_error("Heap is empty");
-        if (heap.size() == 1) {
+        if(heap.empty()) throw std::out_of_range("Heap is empty");
+        if(heap.size() == 1){
             heap.pop_back();
             return;
         }
-        int maxIndex = findMaxIndex();
-        std::swap(heap[maxIndex], heap.back());
+        int maxI = findMaxI();
+        std::swap(heap[maxI], heap.back());
         heap.pop_back();
-        if (maxIndex < heap.size()) bubbleDown(maxIndex);
+        if(!heap.empty()) nodeDown(maxI);
     }
-
+    void print(){
+        for(auto i : heap){
+            std::cout << i << " ";
+        }
+        std::cout << std::endl;
+    }
 private:
     std::vector<T> heap;
-
-    int findMaxIndex() {
-        if (heap.size() == 1) return 0;
-        if (heap.size() == 2) return 1;
+    int findMaxI(){
+        if(heap.size() == 1) return 0;
+        if(heap.size() == 2) return 1;
         return heap[1] > heap[2] ? 1 : 2;
     }
-
-    void bubbleUp(int index) {
+    void nodeUp(int index) {
         if (index == 0) return;
         int parent = (index - 1) / 2;
-        if (isMinLevel(index)) {
+
+        if (isMinL(index)) { 
+            //  min 層
             if (heap[index] > heap[parent]) {
+                // 大於父移到 max 
                 std::swap(heap[index], heap[parent]);
-                bubbleUpMax(parent);
+                nodeUpMax(parent);
             } else {
-                bubbleUpMin(index);
+                // 小於父 min 
+                nodeUpMin(index);
             }
-        } else {
+        } else {  // max 層
+            //大於父節點?
             if (heap[index] < heap[parent]) {
+                // 小於父移到 min 
                 std::swap(heap[index], heap[parent]);
-                bubbleUpMin(parent);
+                nodeUpMin(parent);
             } else {
-                bubbleUpMax(index);
+                // 大於父 max 
+                nodeUpMax(index);
             }
         }
     }
-
-    void bubbleUpMin(int index) {
+    void nodeUpMin(int index) {
         if (index == 0) return;
-        int grandparent = (index - 3) / 4;
+        int grandparent = (index - 3) / 4; 
         if (grandparent >= 0 && heap[index] < heap[grandparent]) {
             std::swap(heap[index], heap[grandparent]);
-            bubbleUpMin(grandparent);
+            nodeUpMin(grandparent);  
         }
     }
-
-    void bubbleUpMax(int index) {
+    void nodeUpMax(int index) {
         if (index == 0) return;
-        int grandparent = (index - 3) / 4;
-        if (grandparent >= 0 && heap[index] > heap[grandparent]) {
+        int grandparent = (index - 3) / 4; 
+        if (grandparent > 0 && heap[index] > heap[grandparent]) {
             std::swap(heap[index], heap[grandparent]);
-            bubbleUpMax(grandparent);
+            nodeUpMax(grandparent);  
         }
     }
-
-    void bubbleDown(int index) {
-        if (isMinLevel(index)) {
-            bubbleDownMin(index);
-        } else {
-            bubbleDownMax(index);
+    void nodeDown(int index){
+        if(isMinL(index)){
+            nodeDownMin(index);
+        }
+        else{
+            nodeDownMax(index);
         }
     }
-
-    void bubbleDownMin(int index) {
-        int left = 2 * index + 1;
-        int right = 2 * index + 2;
+    void nodeDownMin(int index){
         int smallest = index;
+        int leftchild = left(index);
+        int rightchild = right(index);
+        
+        for(int child:{leftchild, rightchild, left(leftchild),right(leftchild),left(rightchild),right(rightchild)}){ {
+            if(child < heap.size() && heap[child] < heap[smallest]) smallest = child;
+        }
+        }
+        
+        
+        //if(leftchild < heap.size() && heap[leftchild] < heap[smallest]) smallest = leftchild;
+        //if(rightchild < heap.size() && heap[rightchild] < heap[smallest]) smallest = rightchild;
 
-        if (left < heap.size() && heap[left] < heap[smallest]) smallest = left;
-        if (right < heap.size() && heap[right] < heap[smallest]) smallest = right;
-
-        if (smallest != index) {
+        if(smallest != index){
             std::swap(heap[index], heap[smallest]);
-            bubbleDown(smallest);
+            nodeDownMin(smallest);
         }
     }
-
-    void bubbleDownMax(int index) {
-        int left = 2 * index + 1;
-        int right = 2 * index + 2;
+    void nodeDownMax(int index){
         int largest = index;
+        int leftchild = left(index);
+        int rightchild = right(index);
+        for(int child:{leftchild, rightchild, left(leftchild),right(leftchild),left(rightchild),right(rightchild)}){ {
+            if(child < heap.size() && heap[child] > heap[largest]) largest = child;
+        }
+        }
+        // if(leftchild < heap.size() && heap[leftchild] > heap[largest]) largest = leftchild;
+        // if(rightchild < heap.size() && heap[rightchild] > heap[largest]) largest = rightchild;
 
-        if (left < heap.size() && heap[left] > heap[largest]) largest = left;
-        if (right < heap.size() && heap[right] > heap[largest]) largest = right;
-
-        if (largest != index) {
+        if(largest != index){
             std::swap(heap[index], heap[largest]);
-            bubbleDown(largest);
+            nodeDownMax(largest);
         }
     }
-
-    bool isMinLevel(int index) {
-        int level = 0;
-        while (index > 0) {
-            index = (index - 1) / 2;
-            level++;
-        }
+    bool isMinL(int index){
+        int level = log2(index + 1);//index在幾層 
         return level % 2 == 0;
     }
+    int left(int index) { return 2 * index + 1; }
+    int right(int index) { return 2 * index + 2; }
+    int parent(int index) { return (index - 1) / 2; }
 };
-
 int main() {
-    MinMaxHeap<int> mmHeap; //minmaxHeap (x moremoreHeap (o
+    MinMaxHeap<int> mmHeap;
     int j;
     srand(time(NULL));
-    for (j = 0; j < 10; j++)
-        mmHeap.insert(rand() % 100);
-
-    while (true) {
-        try {
-            std::cout << mmHeap.getMin() << " ";
-            mmHeap.deleteMin();
-        }
-        catch (std::exception&) {
-            break;
-        }
+    for(j = 0;j < 10;j ++){
+      mmHeap.insert(rand() % 100);
+      
+    }
+    //mmHeap.print();
+    while(true) {
+      try {
+        std::cout << mmHeap.getMin() << " ";
+        mmHeap.deleteMin();
+      }
+      catch(std::exception) {
+        break;
+      }
     }
     std::cout << std::endl;
-
-    for (j = 0; j < 10; j++)
-        mmHeap.insert(rand() % 100);
-
-    while (true) {
-        try {
-            std::cout << mmHeap.getMax() << " ";
-            mmHeap.deleteMax();
-        }
-        catch (std::exception&) {
-            break;
-        }
+    // std::cout << std::endl;
+    for(j = 0;j < 10;j ++)
+      mmHeap.insert(rand() % 100);
+   // mmHeap.print();
+    
+    while(true) {
+      try {
+        std::cout << mmHeap.getMax() << " ";
+        mmHeap.deleteMax();
+      }
+      catch(std::exception) {
+        break;
+      }
     }
 
     return 0;
